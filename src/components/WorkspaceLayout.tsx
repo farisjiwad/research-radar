@@ -219,17 +219,6 @@ export function WorkspaceLayout({
             </div>
           )}
 
-          {view === "discover" && (
-            <div className="intro-banner">
-              <div className="intro-icon"><Sparkles size={20} /></div>
-              <div>
-                <strong>Find signals, not just papers.</strong>
-                <p>Explore recent work, save what matters, and investigate potential research directions with evidence.</p>
-              </div>
-              <span className="banner-label">BUILT FOR CURIOSITY <ArrowRight size={14} /></span>
-            </div>
-          )}
-
           {showFilters && (
             <div className="filters">
               <form className="search-box" onSubmit={submitSearch}>
