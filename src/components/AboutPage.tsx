@@ -65,10 +65,6 @@ export function AboutPage({ snapshot, stateReady, onExportBackup, onImportBackup
             onChange={(event) => importBackup(event.target.files?.[0])}
           />
         </div>
-        <h3>Migrate from the earlier local app</h3>
-        <p>On the machine containing its SQLite database, export a JSON file, then import it here:</p>
-        <pre><code>npm run export-sqlite -- ~/Downloads/research-radar-backup.json</code></pre>
-        <p>Keep the exported file private. The local app and public site do not share browser storage automatically.</p>
       </section>
     </section>
   );
