@@ -53,25 +53,6 @@ export function PaperDetail({ paper, saved, stateReady, analysis, analysisError,
             <h3>Abstract</h3>
             <p className="abstract">{paper.abstract}</p>
           </section>
-
-          <section className="detail-section opportunity-section">
-            <div className="opportunity-heading">
-              <div className="intro-icon"><Lightbulb size={19} /></div>
-              <div>
-                <div className="section-kicker">EVIDENCE, NOT ANSWERS</div>
-                <h3>Explore a research direction</h3>
-              </div>
-            </div>
-            <p>
-              Prepare an abstract-based lead and a link for a manual arXiv search. This is a simple heuristic, not AI or
-              full-text analysis; no counter-search runs automatically.
-            </p>
-            <button className="primary-button" onClick={onAnalyze}>
-              <Sparkles size={16} /> {analysis ? "Prepare again" : "Prepare investigation"}
-            </button>
-            {analysisError && <div className="notice error" role="alert">{analysisError}</div>}
-            {analysis && <OpportunityCard analysis={analysis} />}
-          </section>
         </div>
       </div>
     </div>
