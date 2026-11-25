@@ -24,7 +24,7 @@ export function ProblemSummary({ papers, topic, openPaper }: ProblemSummaryProps
           </strong>
           <p>
             {future} possible future-work or open-question mentions; {signals.length - future} challenge or limitation
-            mentions. Select a topic above for a field-specific view.
+            mentions.
           </p>
         </div>
       </div>
@@ -57,7 +57,6 @@ export function ProblemSummary({ papers, topic, openPaper }: ProblemSummaryProps
                   <span className="tag">
                     {signal.kind === "future" ? "POSSIBLE OPEN QUESTION / FUTURE WORK" : "CHALLENGE / LIMITATION MENTION"}
                   </span>
-                  <span>UNVERIFIED · ABSTRACT ONLY</span>
                 </div>
                 <blockquote>“{signal.passage}”</blockquote>
                 <button className="paper-title" onClick={() => openPaper(paper)}>{paper.title}</button>
