@@ -95,12 +95,15 @@ export function WorkspaceLayout({
 
   return (
     <div className="app-shell" data-layout={layout} data-density={density}>
-      <aside className={`sidebar ${mobileMenuOpen ? "sidebar-open" : ""}`}>
+      <aside id="workspace-sidebar" className={`sidebar ${mobileMenuOpen ? "sidebar-open" : ""}`}>
         <div className="brand">
           <div>
             <strong>research radar</strong>
             <span>YOUR RESEARCH COMPASS</span>
           </div>
+          <button className="mobile-sidebar-close" aria-label="Close navigation" onClick={() => setMobileMenuOpen(false)}>
+            <X size={20} />
+          </button>
         </div>
         <nav aria-label="Main navigation">
           <span className="nav-heading">WORKSPACE</span>
@@ -145,7 +148,13 @@ export function WorkspaceLayout({
 
       <main className="main">
         <header className="topbar">
-          <button className="mobile-menu" aria-label="Toggle navigation" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          <button
+            className="mobile-menu"
+            aria-label={mobileMenuOpen ? "Close navigation" : "Open navigation"}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="workspace-sidebar"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
             <Menu size={20} />
           </button>
           <div className="breadcrumbs">
