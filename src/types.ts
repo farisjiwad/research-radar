@@ -41,3 +41,4 @@ export type View = "overview" | "discover" | "saved" | "problems" | "about";
 export type Theme = "field" | "library" | "moss" | "ocean" | "ember";
 export type Layout = "standard" | "wide" | "reading";
 export type Density = "full" | "balanced" | "concise";
+export type ViewMode = "simple" | "detailed";

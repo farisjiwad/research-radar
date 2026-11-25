@@ -122,3 +122,24 @@
 	.heading-button{min-height:44px}
 }
 @media(min-width:701px){.mobile-sidebar-close{display:none}}
+
+.view-mode-control{display:grid;gap:7px;color:#718177;font-size:13px;font-weight:600}
+.view-mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:3px;border:1px solid #dfe7e1;border-radius:6px;background:#f2f5f2}
+.view-mode-switch button{min-height:44px;border:0;border-radius:4px;background:transparent;color:#718177;font:600 13px "DM Sans",sans-serif}
+.view-mode-switch button[aria-pressed="true"]{background:#fff;color:#2d4938;box-shadow:0 1px 3px #17251d24}
+[data-theme="dark"] .view-mode-switch{background:var(--surface-soft);border-color:var(--border)}
+[data-theme="dark"] .view-mode-switch button{color:var(--muted)}
+[data-theme="dark"] .view-mode-switch button[aria-pressed="true"]{background:var(--surface);color:var(--text)}
+
+[data-view-mode="simple"] .dashboard-stat{grid-template-columns:1fr}
+[data-view-mode="simple"] .dashboard-stat .stat-icon,
+[data-view-mode="simple"] .dashboard-stat small,
+[data-view-mode="simple"] .paper-number{display:none}
+[data-view-mode="simple"] .paper-meta>span:not(.tag){display:none}
+[data-view-mode="simple"] .paper-abstract{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;-webkit-line-clamp:2;line-clamp:2}
+[data-view-mode="simple"] .dashboard-lead blockquote,
+[data-view-mode="simple"] .problem-card blockquote{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;-webkit-line-clamp:3;line-clamp:3}
+[data-view-mode="simple"] .dashboard-panel{padding:18px}
+[data-view-mode="simple"] .page-heading .eyebrow,
+[data-view-mode="simple"] .dashboard .section-kicker,
+[data-view-mode="simple"] .section-top .section-kicker{display:none}

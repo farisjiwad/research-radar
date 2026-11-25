@@ -1,9 +1,10 @@
 import { ArrowRight, Bookmark, BookmarkCheck, ThumbsDown, ThumbsUp } from "lucide-react";
-import { date } from "../research.js";
+import { compactAuthors, date } from "../research.js";
 import type { Paper } from "../types.js";
 
 type PaperCardProps = {
   paper: Paper;
+  simpleView: boolean;
   index: number;
   saved: boolean;
   feedback?: string;
@@ -13,9 +14,9 @@ type PaperCardProps = {
   onOpen: () => void;
 };
 
-export function PaperCard({ paper, index, saved, feedback, stateReady, onSave, onFeedback, onOpen }: PaperCardProps) {
-  const authorText = paper.authors.slice(0, 4).join(", ");
-  const extraAuthors = paper.authors.length > 4 ? ` +${paper.authors.length - 4} more` : "";
+export function PaperCard({ paper, simpleView, index, saved, feedback, stateReady, onSave, onFeedback, onOpen }: PaperCardProps) {
+  const authorText = simpleView ? compactAuthors(paper.authors) : paper.authors.slice(0, 4).join(", ");
+  const extraAuthors = !simpleView && paper.authors.length > 4 ? ` +${paper.authors.length - 4} more` : "";
   const revised = paper.updated.slice(0, 10) !== paper.published.slice(0, 10);
 
   return (
@@ -24,8 +25,8 @@ export function PaperCard({ paper, index, saved, feedback, stateReady, onSave, o
       <div className="paper-body">
         <div className="paper-meta">
           <span className="tag">{paper.categories[0] || "arXiv"}</span>
-          <span>SUBMITTED {date(paper.published).toUpperCase()}</span>
-          {revised && <span>REVISED {date(paper.updated).toUpperCase()}</span>}
+          {!simpleView && <span>SUBMITTED {date(paper.published).toUpperCase()}</span>}
+          {!simpleView && revised && <span>REVISED {date(paper.updated).toUpperCase()}</span>}
         </div>
         <button className="paper-title" onClick={onOpen}>{paper.title}</button>
         <p className="authors">{authorText}{extraAuthors}</p>

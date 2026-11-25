@@ -9,7 +9,7 @@ import { PaperDetail } from "./components/PaperDetail.js";
 import { PapersPage } from "./components/PapersPage.js";
 import { WorkspaceLayout } from "./components/WorkspaceLayout.js";
 import { message } from "./research.js";
-import type { Density, Layout, Paper, Result, Snapshot, State, Theme, View } from "./types.js";
+import type { Density, Layout, Paper, Result, Snapshot, State, Theme, View, ViewMode } from "./types.js";
 
 import "./style.css";
 
@@ -22,6 +22,7 @@ function readPreferences() {
     const savedTheme = window.localStorage.getItem("research-radar-theme");
     const savedLayout = window.localStorage.getItem("research-radar-layout");
     const savedDensity = window.localStorage.getItem("research-radar-density");
+    const savedViewMode = window.localStorage.getItem("research-radar-view-mode");
     const theme: Theme = savedTheme === "dark"
       ? "moss"
       : savedTheme === "light"
@@ -29,13 +30,15 @@ function readPreferences() {
         : themeOptions.find((option) => option === savedTheme) || "field";
     const layout = layoutOptions.find((option) => option === savedLayout) || "standard";
     const density = densityOptions.find((option) => option === savedDensity) || "full";
+    const viewMode: ViewMode = savedViewMode === "detailed" ? "detailed" : "simple";
 
-    return { theme, layout, density, error: "" };
+    return { theme, layout, density, viewMode, error: "" };
   } catch {
     return {
       theme: "field" as Theme,
       layout: "standard" as Layout,
       density: "full" as Density,
+      viewMode: "simple" as ViewMode,
       error: "Could not read your saved view preferences. Your browser may block local storage.",
     };
   }
@@ -64,12 +67,21 @@ const pageCopy: Record<View, { title: string; description: string }> = {
   },
 };
 
+const simpleDescriptions: Record<View, string> = {
+  overview: "Recent papers and ideas worth exploring.",
+  discover: "Browse recent computer science papers.",
+  saved: "Papers you saved to read later.",
+  problems: "Possible challenges mentioned in paper abstracts.",
+  about: "How Research Radar and your saved data work.",
+};
+
 export function App() {
   const [view, setView] = useState<View>("overview");
   const [preferences] = useState(readPreferences);
   const [theme, setTheme] = useState(preferences.theme);
   const [layout, setLayout] = useState(preferences.layout);
   const [density, setDensity] = useState(preferences.density);
+  const [viewMode, setViewMode] = useState(preferences.viewMode);
   const [state, setState] = useState<State>({ saved: [], interests: [], feedback: {} });
   const [stateReady, setStateReady] = useState(false);
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
@@ -140,13 +152,20 @@ export function App() {
 
   const result = useMemo<Result | null>(() => {
     if (!snapshot) return null;
+    const simpleView = viewMode === "simple";
+    const query = simpleView ? "" : submittedSearch;
     return {
-      papers: filterSnapshot(snapshot, { topic, days, search: submittedSearch, limit }),
-      query: submittedSearch,
+      papers: filterSnapshot(snapshot, {
+        topic,
+        days: simpleView ? "30" : days,
+        search: query,
+        limit,
+      }),
+      query,
       fetchedAt: snapshot.generatedAt,
       limit: Number(limit),
     };
-  }, [snapshot, topic, days, submittedSearch, limit]);
+  }, [snapshot, topic, days, submittedSearch, limit, viewMode]);
 
   const savedIds = useMemo(() => new Set(state.saved.map((paper) => paper.id)), [state.saved]);
   const papers = view === "saved" ? state.saved : result?.papers || [];
@@ -258,13 +277,14 @@ export function App() {
   }
 
   const { title, description } = pageCopy[view];
+  const simpleView = viewMode === "simple";
   const papersView = view === "discover" || view === "saved" || view === "problems";
 
   return (
     <WorkspaceLayout
       view={view}
       title={title}
-      description={description}
+      description={simpleView ? simpleDescriptions[view] : description}
       savedCount={state.saved.length}
       interests={state.interests}
       topic={topic}
@@ -274,6 +294,7 @@ export function App() {
       theme={theme}
       layout={layout}
       density={density}
+      viewMode={viewMode}
       actionError={actionError}
       snapshotStatus={error ? "Snapshot unavailable" : result ? "Snapshot loaded" : "Loading snapshot"}
       onNavigate={setView}
@@ -287,10 +308,12 @@ export function App() {
       onThemeChange={(value) => changePreference("research-radar-theme", value as Theme, setTheme, "appearance")}
       onLayoutChange={(value) => changePreference("research-radar-layout", value as Layout, setLayout, "layout")}
       onDensityChange={(value) => changePreference("research-radar-density", value as Density, setDensity, "text density")}
+      onViewModeChange={(value) => changePreference("research-radar-view-mode", value as ViewMode, setViewMode, "view mode")}
       onDismissError={() => setActionError("")}
     >
       {view === "about" && (
         <AboutPage
+          simpleView={simpleView}
           snapshot={snapshot}
           stateReady={stateReady}
           onExportBackup={exportBackup}
@@ -300,6 +323,7 @@ export function App() {
 
       {view === "overview" && (
         <Dashboard
+          simpleView={simpleView}
           result={result}
           loading={loading}
           error={error}
@@ -313,6 +337,7 @@ export function App() {
 
       {papersView && (
         <PapersPage
+          simpleView={simpleView}
           view={view}
           papers={papers}
           result={result}
@@ -333,6 +358,7 @@ export function App() {
 
       {selectedPaper && (
         <PaperDetail
+          simpleView={simpleView}
           paper={selectedPaper}
           saved={savedIds.has(selectedPaper.id)}
           stateReady={stateReady}

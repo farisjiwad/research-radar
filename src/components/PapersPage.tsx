@@ -6,6 +6,7 @@ import type { Paper, Result, State, View } from "../types.js";
 type PapersView = Extract<View, "discover" | "saved" | "problems">;
 
 type PapersPageProps = {
+  simpleView: boolean;
   view: PapersView;
   papers: Paper[];
   result: Result | null;
@@ -24,6 +25,7 @@ type PapersPageProps = {
 };
 
 export function PapersPage({
+  simpleView,
   view,
   papers,
   result,
@@ -49,15 +51,15 @@ export function PapersPage({
     <>
       <div className="section-top">
         <div>
-          <div className="section-kicker">{kicker}</div>
+          <div className="section-kicker">{simpleView ? (isSavedView ? "SAVED" : view === "problems" ? "POSSIBLE LEADS" : "RECENT PAPERS") : kicker}</div>
           <h2>{title} <span className="result-count">{count}</span></h2>
         </div>
-        <div className="section-note">
+        {!simpleView && <div className="section-note">
           <span className="small-dot" /> {isSavedView ? "Stored on this device" : "Newest submissions first"}
-        </div>
+        </div>}
       </div>
 
-      {!isSavedView && (
+      {!isSavedView && !simpleView && (
         <div className="coverage compact-coverage">
           <span>
             {result
@@ -90,7 +92,7 @@ export function PapersPage({
         <div className="state-box">
           <Search size={25} />
           <strong>No papers found</strong>
-          <p>Try a broader search, another topic, or a longer date range.</p>
+          <p>{simpleView ? "Try another topic." : "Try a broader search, another topic, or a longer date range."}</p>
         </div>
       )}
 
@@ -98,20 +100,21 @@ export function PapersPage({
         <div className="state-box">
           <Bookmark size={25} />
           <strong>Your shortlist is empty</strong>
-          <p>Save a paper from Discover to keep it here for later.</p>
+          <p>{simpleView ? "Save papers with the bookmark button." : "Save a paper from Discover to keep it here for later."}</p>
           <button className="outline-button" onClick={() => onNavigate("discover")}>Explore papers</button>
         </div>
       )}
 
       {(isSavedView || (!loading && !error)) && papers.length > 0 && (
         view === "problems" ? (
-          <ProblemSummary papers={papers} topic={topic} openPaper={onOpenPaper} />
+          <ProblemSummary simpleView={simpleView} papers={papers} topic={topic} openPaper={onOpenPaper} />
         ) : (
           <div className="paper-list">
             {papers.map((paper, index) => (
               <PaperCard
                 key={paper.id}
                 paper={paper}
+                simpleView={simpleView}
                 index={index}
                 saved={savedIds.has(paper.id)}
                 feedback={state.feedback[paper.id]}

@@ -20,4 +20,10 @@ export const date = (value: string) => {
   });
 };
 
+export const compactAuthors = (authors: string[]) => {
+  const visible = authors.slice(0, 2).join(", ") || "Authors";
+  const remaining = authors.length - 2;
+  return remaining > 0 ? `${visible} +${remaining} more` : visible;
+};
+
 export const message = (error: unknown) => error instanceof Error ? error.message : "Something went wrong.";

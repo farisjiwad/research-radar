@@ -1,8 +1,9 @@
 import { Bookmark, BookmarkCheck, CircleHelp, ExternalLink, FileText, FlaskConical, Lightbulb, Sparkles, X } from "lucide-react";
-import { date } from "../research.js";
+import { compactAuthors, date } from "../research.js";
 import type { Opportunity, Paper } from "../types.js";
 
 type PaperDetailProps = {
+  simpleView: boolean;
   paper: Paper;
   saved: boolean;
   stateReady: boolean;
@@ -13,7 +14,7 @@ type PaperDetailProps = {
   onAnalyze: () => void;
 };
 
-export function PaperDetail({ paper, saved, stateReady, analysis, analysisError, onClose, onSave, onAnalyze }: PaperDetailProps) {
+export function PaperDetail({ simpleView, paper, saved, stateReady, analysis, analysisError, onClose, onSave, onAnalyze }: PaperDetailProps) {
   return (
     <div className="overlay panel-overlay" onMouseDown={onClose}>
       <div
@@ -24,19 +25,19 @@ export function PaperDetail({ paper, saved, stateReady, analysis, analysisError,
         onMouseDown={(event) => event.stopPropagation()}
       >
         <div className="panel-top">
-          <span><FileText size={17} /> PAPER DETAILS</span>
+          <span><FileText size={17} /> {simpleView ? "PAPER" : "PAPER DETAILS"}</span>
           <button className="close static" aria-label="Close" onClick={onClose}><X size={20} /></button>
         </div>
 
         <div className="panel-content">
           <div className="tags">
-            {paper.categories.slice(0, 3).map((tag) => <span className="tag" key={tag}>{tag}</span>)}
+            {paper.categories.slice(0, simpleView ? 1 : 3).map((tag) => <span className="tag" key={tag}>{tag}</span>)}
           </div>
           <h2 id="paper-title">{paper.title}</h2>
-          <p className="detail-authors">{paper.authors.join(", ")}</p>
+          <p className="detail-authors">{simpleView ? compactAuthors(paper.authors) : paper.authors.join(", ")}</p>
           <div className="detail-dates">
-            <span>FIRST SUBMITTED<strong>{date(paper.published)}</strong></span>
-            <span>LATEST REVISION<strong>{date(paper.updated)}</strong></span>
+            <span>{simpleView ? "SUBMITTED" : "FIRST SUBMITTED"}<strong>{date(paper.published)}</strong></span>
+            {!simpleView && <span>LATEST REVISION<strong>{date(paper.updated)}</strong></span>}
           </div>
           <div className="detail-actions">
             <a className="primary-button" href={paper.versionUrl} target="_blank" rel="noreferrer">
@@ -49,7 +50,7 @@ export function PaperDetail({ paper, saved, stateReady, analysis, analysisError,
           </div>
 
           <section className="detail-section">
-            <div className="section-kicker">FROM THE AUTHORS</div>
+            {!simpleView && <div className="section-kicker">FROM THE AUTHORS</div>}
             <h3>Abstract</h3>
             <p className="abstract">{paper.abstract}</p>
           </section>

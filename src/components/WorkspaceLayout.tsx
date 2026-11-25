@@ -18,7 +18,7 @@ import {
   X,
 } from "lucide-react";
 import { topicName, topics } from "../research.js";
-import type { View } from "../types.js";
+import type { View, ViewMode } from "../types.js";
 
 type WorkspaceLayoutProps = {
   children: ReactNode;
@@ -34,6 +34,7 @@ type WorkspaceLayoutProps = {
   theme: string;
   layout: string;
   density: string;
+  viewMode: ViewMode;
   actionError: string;
   snapshotStatus: string;
   onNavigate: (view: View) => void;
@@ -47,6 +48,7 @@ type WorkspaceLayoutProps = {
   onThemeChange: (value: string) => void;
   onLayoutChange: (value: string) => void;
   onDensityChange: (value: string) => void;
+  onViewModeChange: (value: ViewMode) => void;
   onDismissError: () => void;
 };
 
@@ -64,6 +66,7 @@ export function WorkspaceLayout({
   theme,
   layout,
   density,
+  viewMode,
   actionError,
   snapshotStatus,
   onNavigate,
@@ -77,6 +80,7 @@ export function WorkspaceLayout({
   onThemeChange,
   onLayoutChange,
   onDensityChange,
+  onViewModeChange,
   onDismissError,
 }: WorkspaceLayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -94,7 +98,7 @@ export function WorkspaceLayout({
   }
 
   return (
-    <div className="app-shell" data-layout={layout} data-density={density}>
+    <div className="app-shell" data-layout={layout} data-density={density} data-view-mode={viewMode}>
       <aside id="workspace-sidebar" className={`sidebar ${mobileMenuOpen ? "sidebar-open" : ""}`}>
         <div className="brand">
           <div>
@@ -175,6 +179,13 @@ export function WorkspaceLayout({
               </button>
               {viewOptionsOpen && (
                 <div className="view-options-panel" id="view-options-panel">
+                  <div className="view-mode-control">
+                    <span>View mode</span>
+                    <div className="view-mode-switch" role="group" aria-label="View mode">
+                      <button type="button" aria-pressed={viewMode === "simple"} onClick={() => onViewModeChange("simple")}>Simple</button>
+                      <button type="button" aria-pressed={viewMode === "detailed"} onClick={() => onViewModeChange("detailed")}>Detailed</button>
+                    </div>
+                  </div>
                   <label>
                     <span>Color scheme</span>
                     <select aria-label="Color scheme" value={theme} onChange={(event) => onThemeChange(event.target.value)}>
@@ -193,14 +204,16 @@ export function WorkspaceLayout({
                       <option value="reading">Reading column</option>
                     </select>
                   </label>
-                  <label>
-                    <span>Text density</span>
-                    <select aria-label="Text density" value={density} onChange={(event) => onDensityChange(event.target.value)}>
-                      <option value="full">Full text</option>
-                      <option value="balanced">Balanced</option>
-                      <option value="concise">Concise</option>
-                    </select>
-                  </label>
+                  {viewMode === "detailed" && (
+                    <label>
+                      <span>Text density</span>
+                      <select aria-label="Text density" value={density} onChange={(event) => onDensityChange(event.target.value)}>
+                        <option value="full">Full text</option>
+                        <option value="balanced">Balanced</option>
+                        <option value="concise">Concise</option>
+                      </select>
+                    </label>
+                  )}
                 </div>
               )}
             </div>
@@ -230,16 +243,18 @@ export function WorkspaceLayout({
 
           {showFilters && (
             <div className="filters">
-              <form className="search-box" onSubmit={submitSearch}>
-                <Search size={18} />
-                <input
-                  aria-label="Search papers"
-                  placeholder="Search papers, topics, or keywords..."
-                  value={search}
-                  onChange={(event) => onSearchChange(event.target.value)}
-                />
-                <button type="submit">Search</button>
-              </form>
+              {viewMode === "detailed" && (
+                <form className="search-box" onSubmit={submitSearch}>
+                  <Search size={18} />
+                  <input
+                    aria-label="Search papers"
+                    placeholder="Search papers, topics, or keywords..."
+                    value={search}
+                    onChange={(event) => onSearchChange(event.target.value)}
+                  />
+                  <button type="submit">Search</button>
+                </form>
+              )}
               <div className="select-wrap">
                 <Filter size={16} />
                 <select aria-label="Topic" value={topic} onChange={(event) => onTopicChange(event.target.value)}>
@@ -248,15 +263,17 @@ export function WorkspaceLayout({
                 </select>
                 <ChevronDown size={14} />
               </div>
-              <div className="select-wrap date-select">
-                <select aria-label="Date range" value={days} onChange={(event) => onDaysChange(event.target.value)}>
-                  <option value="7">Last 7 days</option>
-                  <option value="30">Last 30 days</option>
-                  <option value="90">Last 90 days</option>
-                  <option value="365">Last year</option>
-                </select>
-                <ChevronDown size={14} />
-              </div>
+              {viewMode === "detailed" && (
+                <div className="select-wrap date-select">
+                  <select aria-label="Date range" value={days} onChange={(event) => onDaysChange(event.target.value)}>
+                    <option value="7">Last 7 days</option>
+                    <option value="30">Last 30 days</option>
+                    <option value="90">Last 90 days</option>
+                    <option value="365">Last year</option>
+                  </select>
+                  <ChevronDown size={14} />
+                </div>
+              )}
               <div className="select-wrap">
                 <select aria-label="Maximum results" value={limit} onChange={(event) => onLimitChange(event.target.value)}>
                   <option value="40">Up to 40 papers</option>
