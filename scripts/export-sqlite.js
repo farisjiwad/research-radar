@@ -1,7 +1,7 @@
 import { DatabaseSync } from "node:sqlite";
 import { realpathSync, writeFileSync } from "node:fs";
 import { dirname, relative, resolve, sep } from "node:path";
-import { makeBackup } from "../src/storage.js";
+import { makeBackup } from "../src/utils/storage.js";
 
 const target = process.argv[2];
 if (!target) throw new Error("Specify a new backup file outside this project, e.g. npm run export-sqlite -- ~/Downloads/research-radar-backup.json");

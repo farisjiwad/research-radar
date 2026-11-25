@@ -15,6 +15,13 @@ npm start
 
 Open [http://localhost:3000](http://localhost:3000). `npm run dev` also serves the static app during development. Refreshing takes roughly a minute: it requests up to 200 records per configured category with at least 3.1 seconds between arXiv requests. The generated `public/data/papers.json` is ignored by Git; the Pages workflow generates it on every deployment.
 
+## Source layout
+
+- `src/main.tsx` starts React; `src/App.tsx` owns application state, data loading, and user actions.
+- `src/components/` contains the workspace layout and focused views for the dashboard, paper results, details, interests, and About page.
+- `src/types.ts` defines shared application models; `src/research.ts` contains topic metadata and display helpers.
+- `src/utils/` contains snapshot filtering, browser persistence, investigation heuristics, problem-signal detection, and dashboard calculations.
+
 ## Deploy separately to GitHub Pages
 
 1. Create a **separate** GitHub repository for Research Radar. GitHub Pages is public on a standard personal public repository; anyone can see the site, its code, and its paper dataset. Do not upload backups, `data/`, SQLite files, or other personal data.

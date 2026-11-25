@@ -4,9 +4,9 @@ import { mkdtempSync, mkdirSync, rmSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
-import { emptyState, loadState, saveState, makeBackup, parseBackup } from "../src/storage.js";
-import { filterSnapshot } from "../src/snapshot.js";
-import { prepareInvestigation } from "../src/investigation.js";
+import { emptyState, loadState, saveState, makeBackup, parseBackup } from "../src/utils/storage.js";
+import { filterSnapshot } from "../src/utils/snapshot.js";
+import { prepareInvestigation } from "../src/utils/investigation.js";
 import { createStore } from "../server/store.js";
 
 const paper = { id: "2501.12345", title: "Test: Safe Robot Navigation", abstract: "This is an open question. More work is needed.", authors: ["Researcher"], published: "2025-01-03T00:00:00Z", updated: "2025-01-04T00:00:00Z", categories: ["cs.RO"], url: "https://arxiv.org/abs/2501.12345", versionUrl: "https://arxiv.org/abs/2501.12345v2" };

@@ -2,8 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { discoveryLimit, discoveryQuery, opportunity, parseFeed, relatedTerms } from "../server/arxiv.js";
 import { createStore } from "../server/store.js";
-import { extractProblemSignals } from "../src/problemSignals.js";
-import { categoryBreakdown } from "../src/dashboardData.js";
+import { extractProblemSignals } from "../src/utils/problemSignals.js";
+import { categoryBreakdown } from "../src/utils/dashboardData.js";
 
 const xml = `<?xml version="1.0"?><feed><entry><id>https://arxiv.org/abs/2501.12345v2</id><title> Example
   Paper </title><summary>Our work has an open question. More work is needed.</summary><published>2025-01-01T00:00:00Z</published><updated>2025-01-03T00:00:00Z</updated><author><name>A. Researcher</name></author><category term="cs.AI"/></entry><entry><id>https://arxiv.org/abs/2501.12345v3</id><title>Example Paper</title><summary>Updated abstract.</summary><published>2025-01-01T00:00:00Z</published><updated>2025-01-04T00:00:00Z</updated><author><name>A. Researcher</name></author><category term="cs.AI"/></entry></feed>`;
