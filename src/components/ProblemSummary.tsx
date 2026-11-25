@@ -29,16 +29,6 @@ export function ProblemSummary({ papers, topic, openPaper }: ProblemSummaryProps
         </div>
       </div>
 
-      <div className="problem-caveat">
-        <CircleHelp size={17} />
-        <span>
-          These are keyword-matched abstract sentences, not a synthesized literature review or verified research gaps.
-          They can describe solved problems or be misclassified. No counter-search has been run for these leads. Open a
-          paper and select <strong>Prepare investigation</strong> for a manual arXiv search link; also check full text
-          and other sources.
-        </span>
-      </div>
-
       {!signals.length ? (
         <div className="state-box">
           <Search size={25} />
