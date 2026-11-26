@@ -11,6 +11,7 @@ import {
   LayoutDashboard,
   Lightbulb,
   Menu,
+  RefreshCw,
   Search,
   Settings2,
   SlidersHorizontal,
@@ -37,6 +38,8 @@ type WorkspaceLayoutProps = {
   viewMode: ViewMode;
   actionError: string;
   snapshotStatus: string;
+  loading: boolean;
+  onRefresh: () => void;
   onNavigate: (view: View) => void;
   onManageInterests: () => void;
   onSelectInterest: (code: string) => void;
@@ -69,6 +72,8 @@ export function WorkspaceLayout({
   viewMode,
   actionError,
   snapshotStatus,
+  loading,
+  onRefresh,
   onNavigate,
   onManageInterests,
   onSelectInterest,
@@ -167,6 +172,16 @@ export function WorkspaceLayout({
           <div className="top-right">
             <span className="live-dot" />
             <span>{snapshotStatus}</span>
+            <button
+              className="refresh-button"
+              type="button"
+              aria-label="Refresh snapshot"
+              title="Refresh snapshot"
+              disabled={loading}
+              onClick={onRefresh}
+            >
+              <RefreshCw className={loading ? "spin" : undefined} size={17} />
+            </button>
             <span className="top-divider" />
             <div className="view-options-wrap">
               <button

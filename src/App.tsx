@@ -124,7 +124,7 @@ export function App() {
     setError("");
     setSnapshot(null);
 
-    fetch(new URL("data/papers.json", document.baseURI), { signal: controller.signal })
+    fetch(new URL("data/papers.json", document.baseURI), { signal: controller.signal, cache: "no-cache" })
       .then(async (response) => {
         if (!response.ok) {
           throw new Error(`Snapshot unavailable (HTTP ${response.status}). Run npm run refresh-data and rebuild, or retry after the next Pages deployment.`);
@@ -297,6 +297,8 @@ export function App() {
       viewMode={viewMode}
       actionError={actionError}
       snapshotStatus={error ? "Snapshot unavailable" : result ? "Snapshot loaded" : "Loading snapshot"}
+      loading={loading}
+      onRefresh={() => setRetry((count) => count + 1)}
       onNavigate={setView}
       onManageInterests={() => setInterestsOpen(true)}
       onSelectInterest={selectInterest}
